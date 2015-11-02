@@ -5,14 +5,33 @@ int main(int argc, char* argv[]){
 	if (argc <= 1) return -1;
 
 	string content = readInstanceFile(argv[1]);
-	//cout << content << endl;
 
-	BOWLabel* bow = NULL;
-	int size = processRawData(content, &bow);
+	BOWLabel positives;
+	BOWLabel negatives;
 
-	cout << bow->label << endl;
+	processRawData(content, positives, negatives);
+
+
+	cout << positives.wordsCount << endl;
 
 	return 0;
+}
+
+
+void includeWords(tuple<string, int> word, BOWLabel& bow) {
+	bool found = false;
+	for (int i = 0; i < bow.bow.size(); i++) {
+		if (std::get<0>(bow.bow[i]) == std::get<0>(word)) {
+			bow.wordsCount += std::get<1>(word);
+			std::get<1>(bow.bow[i]) = std::get<1>(word)+std::get<1>(bow.bow[i]);
+			found = true;
+			break;
+		}
+	}
+	if (!found) {
+		bow.bow.push_back(word);
+		bow.wordsCount += std::get<1>(word);
+	}
 }
 
 //read instance file into string
@@ -22,28 +41,28 @@ const string readInstanceFile(const char* file){
 	return content;
 }
 
-int processRawData(const string rawData, BOWLabel** bow) {
+void processRawData(const string rawData, BOWLabel& positves, BOWLabel& negatives) {
 	vector<string> oneLine = split(rawData, "\n");
-	*bow = new BOWLabel[oneLine.size()];
 	vector<string>::iterator it = oneLine.begin();
-	int i = 0;
 	while (it != oneLine.end()) {
-		processBOWLabel(*it, *(bow)+i);
+		processBOWLabel(*it, positves, negatives);
 		it++;
-		i++;
 	}
-	return oneLine.size();
 }
 
-void processBOWLabel(const string rawData, BOWLabel* bow) {
+void processBOWLabel(const string rawData, BOWLabel& positves, BOWLabel& negatives) {
 	vector<string> oneLine = split(rawData, " ");
 	vector<string>::iterator it = oneLine.begin();
-	bow->label = stoi(*it);
+	int label = stoi(*it);
 	it++;
 	while (it != oneLine.end()) {
 		vector<string> tup = split(*it, ":");
 		tuple<string,int> tuple (tup[0],stoi(tup[1]));
-		bow->bow.push_back(tuple);
+		if (label >= 0) {
+			includeWords(tuple, positves);
+		} else {
+			includeWords(tuple, negatives);
+		}
 		it++;
 	}
 }
