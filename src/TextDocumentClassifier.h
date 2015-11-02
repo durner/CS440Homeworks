@@ -3,9 +3,21 @@
 
 #include <iostream>
 #include <fstream>
+#include <list>
+#include <tuple>
+#include <string.h>
+#include <vector>
 using namespace std;
 
-int main(int, char**);
-string readInstanceFile(char*);
+struct BOWLabel
+{
+	int label;
+	list<tuple<string, int>> bow;
+};
 
+int main(int, char**);
+const string readInstanceFile(const char*);
+int processRawData(const string, BOWLabel**);
+void processBOWLabel(const string, BOWLabel*);
+const vector<string> split(const string, const char*);
 #endif
