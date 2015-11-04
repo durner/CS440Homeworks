@@ -27,7 +27,6 @@ void processMegaLabel(const string rawData, MultinomialLabel** multinomial, Bern
 				(*bernoulli+i)->documentsCount++;
 				includeWords(tuples, *(*multinomial+i), *(*bernoulli+i));
 			}
-			else includeWords(emptyTuple, *(*multinomial+i), *(*bernoulli+i));
 		}
 		it++;
 	}
@@ -61,7 +60,7 @@ void includeWords(tuple<string, int> word, MultinomialLabel& multinomial, Bernou
 
 const vector<string> split(const string s, const char* delim) {
     vector<string> elems;
-    char * writable = new char[s.size() + 1];
+    char writable[s.size() + 1];
 	std::copy(s.begin(), s.end(), writable);
 	writable[s.size()] = '\0';
 	char* pch = strtok (writable,delim);

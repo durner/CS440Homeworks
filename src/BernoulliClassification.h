@@ -2,6 +2,7 @@
 #define BERNOULLICALLSIFICATION_H_
 
 #include <tuple>
+#include <set>
 #include <vector>
 
 using namespace std;
@@ -15,7 +16,9 @@ struct BernoulliLabel
 };
 
 const int testBernoulli(const string, BernoulliLabel**, const BernoulliLabel**, const int);
-void processTestBernoulliLabel(const string, BernoulliLabel&, const BernoulliLabel**, const int);
-void trainLabelBernoulli(BernoulliLabel&, const BernoulliLabel**, const int);
+void processTestBernoulliLabel(const string, BernoulliLabel&, const BernoulliLabel**, const int, const int);
+void trainLabelBernoulli(BernoulliLabel&, const BernoulliLabel**, const int, const int);
+const int countUniqueWords(const BernoulliLabel**, const int);
+const bool wordInOriginalData(const string, const BernoulliLabel**, const int);
 
 #endif
