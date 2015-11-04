@@ -1,9 +1,2 @@
-The program needs three arguments: train-data, test-data and amount of different classes.
-
-It performs an Naive Bayes with Laplacian smoothing approach to classify the data.
-
-This program was developed as part of the Artificial Intelligence course CS440 at the University of Illinois.
-
-The original probelm set can be found at http://web.engr.illinois.edu/~slazebni/fall15/assignment3.html#text.
-
+Artificial Intelligence (CS440) at the University of Illinois.
 
