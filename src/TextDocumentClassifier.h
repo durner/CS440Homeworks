@@ -8,24 +8,37 @@
 #include <vector>
 using namespace std;
 
-struct BOWLabel
+struct MultinomialLabel
 {
 	int label;
 	int trainedLabel;
 	int wordsCount;
-	int bernulliCount;
 	vector<tuple<string, int>> bow;
 };
 
+struct BernoulliLabel
+{
+	int label;
+	int trainedLabel;
+	int documentsCount;
+	vector<tuple<string, int>> bow;
+};
+
+
+void train(const string, MultinomialLabel&, MultinomialLabel&, BernoulliLabel&, BernoulliLabel&);
+void processMegaLabel(const string, MultinomialLabel&, MultinomialLabel&, BernoulliLabel&, BernoulliLabel&);
+void includeWords(tuple<string, int>, MultinomialLabel&, BernoulliLabel&);
+
+const int test(const string, MultinomialLabel**, const MultinomialLabel&, const MultinomialLabel&);
+void processTestMultinomialLabel(const string, MultinomialLabel&, const MultinomialLabel&, const MultinomialLabel&);
+void trainLabel(MultinomialLabel&, const MultinomialLabel&, const MultinomialLabel&);
+
+const int testBernoulli(const string, BernoulliLabel**, const BernoulliLabel&, const BernoulliLabel&);
+void processTestBernoulliLabel(const string, BernoulliLabel&, const BernoulliLabel&, const BernoulliLabel&);
+void trainLabelBernoulli(BernoulliLabel&, const BernoulliLabel&, const BernoulliLabel&);
+
 int main(int, char**);
 const string readInstanceFile(const char*);
-void train(const string, BOWLabel&, BOWLabel&);
-const int test(const string, BOWLabel**, const BOWLabel&, const BOWLabel&, const bool);
-void processBOWTestLabel(const string, BOWLabel&, const BOWLabel&, const BOWLabel&, const bool);
-void processBOWMegaLabel(const string, BOWLabel&, BOWLabel&);
-void includeWords(vector<tuple<string, int>>, BOWLabel&);
 const vector<string> split(const string, const char*);
-void trainLabel(BOWLabel&, const BOWLabel&, const BOWLabel&);
-void trainLabelBernulli(BOWLabel&, const BOWLabel&, const BOWLabel&);
-const int countUniqueWords(const BOWLabel&, const BOWLabel&);
+const int countUniqueWords(const MultinomialLabel&, const MultinomialLabel&);
 #endif
