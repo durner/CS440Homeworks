@@ -26,6 +26,7 @@ int main(int argc, char* argv[]){
 	const MultinomialLabel* mTrainMegaSetsConst = const_cast<const MultinomialLabel*>(mTrainMegaSets);
 	const BernoulliLabel* bTrainMegaSetsConst = const_cast<const BernoulliLabel*>(bTrainMegaSets);
 
+	cout << "==================================" << endl;
 	cout << "Classficiation (Multinomial Naive Bayes) of test data in progress..." << endl;
 	int testLabelSize = test(testData, &mTestLabels, &mTrainMegaSetsConst, classes);
 	cout << "Classifier Tested" << endl;
@@ -36,10 +37,11 @@ int main(int argc, char* argv[]){
 			correctCount++;
 		}
 	}
-
+	cout << "----------------------------------" << endl;
 	float accuracy = (float) correctCount / (float) testLabelSize;
 	cout << "Multinomial Naive Bayes Accuracy: " << accuracy << endl;
 
+	cout << "==================================" << endl;
 
 	cout << "Classficiation (Bernulli Naive Bayes) of test data in progress..." << endl;
 	testLabelSize = testBernoulli(testData, &bTestLabels, &bTrainMegaSetsConst, classes);
@@ -51,8 +53,32 @@ int main(int argc, char* argv[]){
 			correctCount++;
 		}
 	}
+	cout << "----------------------------------" << endl;
 	accuracy = (float) correctCount / (float) testLabelSize;
 	cout << "Bernulli Naive Bayes Accuracy: " << accuracy << endl;
+
+	cout << "==================================" << endl;
+	cout << "Top 20 for Multinomial Naive Bayes:" << endl;
+	for (int i = 0; i < classes; i++) {
+		cout << "Class: " << (mTrainMegaSets+i)->label << endl;
+		sort(begin((mTrainMegaSets+i)->bow), end((mTrainMegaSets+i)->bow), TupleComparator<1>());
+		reverse(begin((mTrainMegaSets+i)->bow), end((mTrainMegaSets+i)->bow));
+		for (int j = 0; j < 20; j++) {
+			cout << (j+1) << ":\t" << get<0>((mTrainMegaSets+i)->bow[j]) << " = " << get<1>((mTrainMegaSets+i)->bow[j]) << endl;
+		}
+		cout << "------------------------------" << endl;
+	}
+	cout << "==================================" << endl;
+	cout << "Top 20 for Bernulli Naive Bayes:" << endl;
+	for (int i = 0; i < classes; i++) {
+		cout << "Class: " << (mTrainMegaSets+i)->label << endl;
+		sort(begin((bTrainMegaSets+i)->bow), end((bTrainMegaSets+i)->bow), TupleComparator<1>());
+		reverse(begin((bTrainMegaSets+i)->bow), end((bTrainMegaSets+i)->bow));
+		for (int j = 0; j < 20; j++) {
+			cout << (j+1) << ":\t" << get<0>((bTrainMegaSets+i)->bow[j]) << " = " << get<1>((bTrainMegaSets+i)->bow[j]) << endl;
+		}
+		cout << "------------------------------" << endl;
+	}
 
 	delete[] mTestLabels;
 	delete[] bTestLabels;
@@ -61,7 +87,6 @@ int main(int argc, char* argv[]){
 
 	return 0;
 }
-
 
 //read instance file into string
 const string readInstanceFile(const char* file){
