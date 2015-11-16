@@ -32,9 +32,9 @@ void processTestBernoulliLabel(const string rawData, BernoulliLabel& bow, const 
 
 void trainLabelBernoulli(BernoulliLabel& bow, const BernoulliLabel** bernoulli, const int classes, const int v){
 	vector<tuple<string, int>>::iterator it = bow.bow.begin();
-	long double* percentages = new long double[classes];
+	double* percentages = new double[classes];
 	for (int i = 0; i < classes; i++) {
-		*(percentages+i) = 1.0;
+		*(percentages+i) = 0.0;
 	}
 	while (it != bow.bow.end()) {
 		for (int i = 0; i < classes; i++) {
@@ -42,20 +42,20 @@ void trainLabelBernoulli(BernoulliLabel& bow, const BernoulliLabel** bernoulli, 
 			bool found = false;
 			while (itr != (*bernoulli+i)->bow.end()) {
 				if (std::get<0>(*itr) == std::get<0>(*it)) {
-					*(percentages+i) *= ((long double) (std::get<1>(*itr) + 1)) / ((*bernoulli+i)->documentsCount + v);
+					*(percentages+i) += log(((double) (std::get<1>(*itr) + 1)) / ((*bernoulli+i)->documentsCount + v));
 					found = true;
 					break;
 				}
 				itr++;
 			}
 			if (!found) {
-				*(percentages+i) *= ((long double) 1) / ((*bernoulli+i)->documentsCount + v);
+				*(percentages+i) += log(((double) 1) / ((*bernoulli+i)->documentsCount + v));
 			}
 		}
 		it++;
 	}
 	int biggestLabel = -1;
-	long double highestPercentage = -1.0;
+	double highestPercentage = strtod("-Inf", NULL);
 	for (int i = 0; i < classes; i++) {
 		if (highestPercentage < *(percentages+i)) {
 			biggestLabel = i;
@@ -63,8 +63,8 @@ void trainLabelBernoulli(BernoulliLabel& bow, const BernoulliLabel** bernoulli, 
 		}
 	}
 	bow.trainedLabel = biggestLabel;
-	delete[] percentages;
 	//cout << bow.label << " vs. " << bow.trainedLabel << " - Pct. " << *(percentages+0) << " - " << *(percentages+1) << endl;
+	delete[] percentages;
 }
 
 const int countUniqueWords(const BernoulliLabel** bernoulli, const int classes){
